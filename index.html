@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TKMB Dashboard by HaoDT v1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=IBM+Plex+Sans+Condensed:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f4;--surface:#fff;--line:#d9dfdd;--ink:#17221f;--muted:#5d6b67;--red:#b91c1c;--orange:#b45309;--green:#15803d;--teal:#0f5f57;--red-soft:#fbe6e6;--orange-soft:#fbf0dd;--green-soft:#e5f4ea;--teal-soft:#e2f0ee;--accent:#c2410c}
+@media(prefers-color-scheme:dark){:root{--bg:#101615;--surface:#172020;--line:#2d3a38;--ink:#e6eeec;--muted:#93a39f;--red:#f87171;--orange:#fbbf24;--green:#4ade80;--teal:#5cc2b5;--red-soft:#361717;--orange-soft:#33270f;--green-soft:#15291c;--teal-soft:#16302d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:13px/1.45 "Be Vietnam Pro",system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.wrap{max-width:100%;margin:0 auto;padding:8px 12px 24px;display:grid;gap:6px}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:8px}
+.logo{display:grid;place-items:center;width:28px;height:28px;border-radius:6px;background:var(--teal);color:#fff;font:800 16px/1 "Be Vietnam Pro",system-ui,sans-serif}
+.brand h1{margin:0;font:700 15px/1.1 "Be Vietnam Pro",system-ui,sans-serif}
+.tag{background:var(--teal);color:#fff;font:600 9px/1 "IBM Plex Sans Condensed",sans-serif;letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:3px}
+.fileinfo{color:var(--muted);font-size:10.5px}
+.btn{font:600 11px "Be Vietnam Pro",system-ui,sans-serif;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:4px 9px;border-radius:5px;cursor:pointer}
+.btn:hover{border-color:var(--teal)}
+.btn.primary{background:var(--teal);border-color:var(--teal);color:#fff}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.kpi{background:var(--surface);padding:6px 10px;display:grid;gap:1px}
+.kpi .lbl{font:600 8.5px/1 "IBM Plex Sans Condensed",sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+.kpi .v{font:700 16px/1.2 "Be Vietnam Pro",system-ui,sans-serif}
+.kpi .s{font-size:10px;color:var(--muted)}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.tabs button{font:600 11px "Be Vietnam Pro",system-ui,sans-serif;border:0;background:none;color:var(--muted);padding:5px 10px;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button.active{color:var(--ink);border-bottom-color:var(--accent)}
+.filters{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:end}
+.f{display:grid;gap:1px}
+.f label{font:600 9px/1 "IBM Plex Sans Condensed",sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--muted)}
+select,input[type=search]{font:500 11px "Be Vietnam Pro",system-ui,sans-serif;border:1px solid var(--line);border-radius:5px;padding:3px 6px;background:var(--surface);color:var(--ink)}
+.tbl-wrap{overflow:auto;max-height:65vh;border:1px solid var(--line);border-radius:8px;background:var(--surface);-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:max-content;min-width:100%;font-size:11px}
+th,td{padding:3px 7px;border-bottom:1px solid var(--line);white-space:nowrap;text-align:right}
+th{position:sticky;top:0;z-index:2;background:var(--surface);font:600 9px/1.2 "IBM Plex Sans Condensed",sans-serif;letter-spacing:.01em;color:var(--muted);cursor:pointer}
+th:hover{color:var(--teal)}
+th:first-child,td:first-child{position:sticky;left:0;z-index:1;background:var(--surface);text-align:left;min-width:150px;font-weight:600;border-right:1px solid var(--line)}
+tr:hover td{background:var(--teal-soft)}
+.cell-bad{color:var(--red);font-weight:600}.cell-warn{color:var(--orange);font-weight:600}.cell-good{color:var(--green);font-weight:600}
+.bar{display:inline-block;height:5px;border-radius:2px;vertical-align:middle;margin-right:3px}
+.bar-red{background:var(--red)}.bar-orange{background:var(--orange)}.bar-green{background:var(--green)}
+.foot{color:var(--muted);font-size:10px;padding-top:4px}
+@media(max-width:760px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}.kpi .v{font-size:14px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand">
+      <div class="logo">🏠</div>
+      <div>
+        <h1>TKMB Dashboard</h1>
+        <div class="fileinfo">by HaoDT v1.0 · Draft</div>
+      </div>
+      <span class="tag">TKMB</span>
+    </div>
+    <div>
+      <button class="btn primary" onclick="exportExcel()">📥 Export</button>
+    </div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+  <div class="tabs" id="tabs"></div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:end;justify-content:space-between">
+    <div class="filters">
+      <div class="f"><label>Tìm</label><input type="search" id="q" placeholder="Tên..." oninput="render()" style="width:110px"></div>
+      <div class="f"><label>GĐV</label><select id="fGdv" onchange="render()"><option value="">Tất cả</option></select></div>
+      <div class="f"><label>Bước</label><select id="fStep" onchange="render()"><option value="">Tất cả</option></select></div>
+      <div class="f"><label>Tỉnh</label><select id="fProv" onchange="render()"><option value="">Tất cả</option></select></div>
+      <button class="btn" onclick="resetFilters()" style="font-size:10px">🔄</button>
+    </div>
+  </div>
+  <div class="tbl-wrap"><table id="tbl"><thead></thead><tbody></tbody></table></div>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const STEPS = ['B1: QLKV→GĐV','B2: Khảo sát+BBTĐ','B3: Duyệt BBTĐ','B4: HĐTĐ','B5: Đàm phán+Ký HĐ','B6: Phát hành KT'];
+
+let DATA=[], TAB='gdv';
+
+const DEMO = [
+  {mb:'MB-20261014-001',name:'Đối diện chợ số 6, Tuyên Quang',gdv:'Nguyễn Mạnh Sơn',prov:'Tuyên Quang',dt:162,mt:9,gia:12,step:'B1: QLKV→GĐV',ngay:'14/10',nguoi_gt:'Nguyễn Khánh Hòa'},
+  {mb:'MB-20261014-002',name:'Đại lộ Thịnh Lang, Phú Thọ',gdv:'Dương Tùng',prov:'Phú Thọ',dt:200,mt:8,gia:25,step:'B3: Duyệt BBTĐ',ngay:'14/10',nguoi_gt:'Nguyễn Thị Điệp'},
+  {mb:'MB-20261013-001',name:'Chợ Hồng Thuận, Nam Định',gdv:'Đặng Văn Dũng',prov:'Nam Định',dt:150,mt:10,gia:16,step:'B2: Khảo sát+BBTĐ',ngay:'13/10',nguoi_gt:'Ngô Xuân Quang'},
+  {mb:'MB-20261013-002',name:'Xóm An Đông, Hải Hậu, Nam Định',gdv:'Đặng Văn Dũng',prov:'Nam Định',dt:120,mt:7.5,gia:15,step:'B5: Đàm phán+Ký HĐ',ngay:'13/10',nguoi_gt:'Ngô Xuân Quang'},
+  {mb:'MB-20261012-001',name:'TDP số 2, TT Thác Bà, Yên Bái',gdv:'Nguyễn Mạnh Sơn',prov:'Yên Bái',dt:160,mt:8.3,gia:13,step:'B4: HĐTĐ',ngay:'12/10',nguoi_gt:'Đỗ Xuân Trường'},
+  {mb:'MB-20261012-002',name:'Tân Khánh, Đồng Hỷ, Thái Nguyên',gdv:'Hồ Nam',prov:'Thái Nguyên',dt:130,mt:8.2,gia:12,step:'B1: QLKV→GĐV',ngay:'12/10',nguoi_gt:'Đỗ Hải Võ'},
+  {mb:'MB-20261011-001',name:'Lũng Phìn, Đồng Văn, Hà Giang',gdv:'Nguyễn Mạnh Sơn',prov:'Hà Giang',dt:154,mt:11,gia:15,step:'B6: Phát hành KT',ngay:'11/10',nguoi_gt:'Đặng Thị Bích Nhi'},
+  {mb:'MB-20261011-002',name:'Quang Bình, Hà Giang',gdv:'Nguyễn Mạnh Sơn',prov:'Hà Giang',dt:180,mt:9,gia:8,step:'B4: HĐTĐ',ngay:'11/10',nguoi_gt:'Đặng Thị Bích Nhi'},
+  {mb:'MB-20261010-001',name:'Xã Đà Bắc, Phú Thọ',gdv:'Dương Tùng',prov:'Phú Thọ',dt:200,mt:10,gia:10,step:'B2: Khảo sát+BBTĐ',ngay:'10/10',nguoi_gt:'Xa Thị Kim Thùy'},
+  {mb:'MB-20261010-002',name:'Thôn Thành Công, Vĩnh Phúc',gdv:'Hồ Nam',prov:'Vĩnh Phúc',dt:150,mt:13,gia:8,step:'B3: Duyệt BBTĐ',ngay:'10/10',nguoi_gt:'Nguyễn Thị Hải'},
+  {mb:'MB-20261015-001',name:'68 Trần Phú, Đồng Văn, Hà Giang',gdv:'Nguyễn Mạnh Sơn',prov:'Hà Giang',dt:140,mt:8,gia:50,step:'B1: QLKV→GĐV',ngay:'15/10',nguoi_gt:'Đỗ Thị Hợi'},
+  {mb:'MB-20261015-002',name:'Xóm Tuy Định, Định Hóa, Thái Bình',gdv:'Đặng Văn Dũng',prov:'Thái Bình',dt:200,mt:8.9,gia:20,step:'B5: Đàm phán+Ký HĐ',ngay:'15/10',nguoi_gt:'Phạm Thị Phượng'},
+  {mb:'MB-20261015-003',name:'Cao Phong, Phú Thọ',gdv:'Dương Tùng',prov:'Phú Thọ',dt:120,mt:14,gia:15,step:'B1: QLKV→GĐV',ngay:'15/10',nguoi_gt:'Bùi Thị Tuyền'},
+  {mb:'MB-20261015-004',name:'Mường Thanh, Điện Biên Phủ',gdv:'Dương Tùng',prov:'Điện Biên',dt:140,mt:7,gia:16,step:'B3: Duyệt BBTĐ',ngay:'15/10',nguoi_gt:'Nguyễn Mai Vân'},
+  {mb:'MB-20261014-003',name:'Bích Trì, Liêm Tuyền, Hà Nam',gdv:'Đặng Văn Dũng',prov:'Hà Nam',dt:180,mt:8,gia:25,step:'B6: Phát hành KT',ngay:'14/10',nguoi_gt:'Nguyễn Thanh Bình'},
+];
+
+function init(){
+  DATA = DEMO;
+  const gdvs = [...new Set(DATA.map(d=>d.gdv))].sort();
+  const provs = [...new Set(DATA.map(d=>d.prov))].sort();
+  document.getElementById('fGdv').innerHTML = '<option value="">Tất cả</option>'+gdvs.map(g=>`<option>${g}</option>`).join('');
+  document.getElementById('fStep').innerHTML = '<option value="">Tất cả</option>'+STEPS.map(s=>`<option>${s}</option>`).join('');
+  document.getElementById('fProv').innerHTML = '<option value="">Tất cả</option>'+provs.map(p=>`<option>${p}</option>`).join('');
+  
+  document.getElementById('tabs').innerHTML = [
+    ['gdv','📋 Theo GĐV'],['step','🔄 Theo Bước'],['prov','🗺 Theo Tỉnh'],['list','📋 Danh sách']
+  ].map(([k,l])=>`<button data-t="${k}" class="${k===TAB?'active':''}">${l}</button>`).join('');
+  document.getElementById('tabs').onclick = e => {
+    const b = e.target.closest('button'); if(!b) return;
+    TAB = b.dataset.t;
+    document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active',x===b));
+    render();
+  };
+  render();
+}
+
+function getFiltered(){
+  let d = [...DATA];
+  const q = (document.getElementById('q').value||'').toLowerCase();
+  const gdv = document.getElementById('fGdv').value;
+  const step = document.getElementById('fStep').value;
+  const prov = document.getElementById('fProv').value;
+  if(q) d = d.filter(r => (r.name||''+r.mb).toLowerCase().includes(q));
+  if(gdv) d = d.filter(r => r.gdv === gdv);
+  if(step) d = d.filter(r => r.step === step);
+  if(prov) d = d.filter(r => r.prov === prov);
+  return d;
+}
+
+function fmt(n,u){
+  if(!n&&n!==0)return'—';
+  if(u==='b'){const a=Math.abs(n);if(a>=1e9)return(n/1e9).toFixed(2)+' tỷ';if(a>=1e6)return(n/1e6).toFixed(1)+' tr';return n.toFixed(1);}
+  return n.toLocaleString('vi-VN');
+}
+
+function render(){
+  const data = getFiltered();
+  const total = DATA.length;
+  
+  // Stats by step
+  const stepCount = {};
+  STEPS.forEach(s => stepCount[s] = DATA.filter(d=>d.step===s).length);
+  
+  // KPI
+  document.getElementById('kpis').innerHTML = [
+    ['Tổng MB', total, ''],
+    ['B1: QLKV→GĐV', stepCount['B1: QLKV→GĐV'], stepCount['B1: QLKV→GĐV']>3?'⚠️ Nhiều':''],
+    ['B2-B3: KS+BBTĐ', stepCount['B2: Khảo sát+BBTĐ']+stepCount['B3: Duyệt BBTĐ'], ''],
+    ['B4: HĐTĐ', stepCount['B4: HĐTĐ'], ''],
+    ['B5: Ký HĐ', stepCount['B5: Đàm phán+Ký HĐ'], ''],
+    ['B6: Đã KT', stepCount['B6: Phát hành KT'], stepCount['B6: Phát hành KT']>2?'✅ Tốt':''],
+    ['Đang hiển thị', data.length, data.length<total?'(đã lọc)':''],
+  ].map(([l,v,s])=>`<div class="kpi"><div class="lbl">${l}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
+
+  // Aggregate by TAB
+  let rows;
+  if(TAB === 'gdv'){
+    const map = new Map();
+    data.forEach(r => {
+      if(!map.has(r.gdv)) map.set(r.gdv, {name:r.gdv, total:0, steps:{}});
+      const m = map.get(r.gdv);
+      m.total++;
+      m.steps[r.step] = (m.steps[r.step]||0) + 1;
+    });
+    rows = [...map.values()].sort((a,b)=>b.total-a.total);
+  } else if(TAB === 'step'){
+    rows = STEPS.map(s => {
+      const items = data.filter(d=>d.step===s);
+      return {name:s, total:items.length, dt:items.reduce((s,r)=>s+(r.dt||0),0), mt:items.reduce((s,r)=>s+(r.mt||0),0), gias:items.map(r=>r.gia||0)};
+    }).filter(r=>r.total>0);
+  } else if(TAB === 'prov'){
+    const map = new Map();
+    data.forEach(r => {
+      if(!map.has(r.prov)) map.set(r.prov, {name:r.prov, total:0, dt:0});
+      const m = map.get(r.prov);
+      m.total++; m.dt += (r.dt||0);
+    });
+    rows = [...map.values()].sort((a,b)=>b.total-a.total);
+  } else {
+    rows = data.map(r => ({...r, name:r.mb+' — '+r.name}));
+  }
+
+  // Table headers
+  let hdr, bodyFn;
+  if(TAB === 'list'){
+    hdr = ['Mã MB','Tên MB','GĐV','Tỉnh','DT','MT','Giá','Bước','Ngày','Người GT'];
+    bodyFn = r => `<tr>
+      <td>${r.mb}</td><td>${r.name}</td><td>${r.gdv}</td><td>${r.prov}</td>
+      <td>${r.dt}m²</td><td>${r.mt}m</td><td>${r.gia}tr</td>
+      <td>${r.step}</td><td>${r.ngay}</td><td>${r.nguoi_gt}</td>
+    </tr>`;
+  } else if(TAB === 'step'){
+    hdr = ['Bước','Số MB','Tổng DT (m²)','Giá TB (tr)'];
+    bodyFn = r => `<tr>
+      <td><b>${r.name}</b></td><td>${r.total}</td><td>${fmt(r.dt,'b')}</td><td>${r.gias.length?(r.gias.reduce((a,b)=>a+b,0)/r.gias.length).toFixed(1):'—'}</td>
+    </tr>`;
+  } else if(TAB === 'prov'){
+    hdr = ['Tỉnh','Số MB','Tổng DT (m²)'];
+    bodyFn = r => `<tr><td><b>${r.name}</b></td><td>${r.total}</td><td>${fmt(r.dt,'b')}</td></tr>`;
+  } else {
+    hdr = ['GĐV','Tổng MB',...STEPS];
+    bodyFn = r => `<tr><td><b>${r.name}</b></td><td>${r.total}</td>${STEPS.map(s=>`<td>${r.steps[s]||'—'}</td>`).join('')}</tr>`;
+  }
+
+  document.getElementById('tbl').querySelector('thead').innerHTML = '<tr>'+hdr.map(h=>`<th>${h}</th>`).join('')+'</tr>';
+  document.getElementById('tbl').querySelector('tbody').innerHTML = rows.map(bodyFn).join('');
+  document.getElementById('foot').textContent = `${rows.length} dòng · ${data.length} MB · by HaoDT v1.0`;
+}
+
+function resetFilters(){ document.getElementById('q').value=''; document.getElementById('fGdv').value=''; document.getElementById('fStep').value=''; document.getElementById('fProv').value=''; render(); }
+function exportExcel(){ alert('Export Excel: sẽ tích hợp sau khi có data thực tế.'); }
+
+init();
+</script>
+</body>
+</html>
